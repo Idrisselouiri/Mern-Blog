@@ -11,10 +11,11 @@ import Home from "./pages/Home.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import Signin from "./pages/Signin.jsx";
 import Login from "./pages/Login.jsx";
+import NavBar from "./components/layout/NavBar.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route>
+    <Route element={<NavBar />}>
       <Route path="/" element={<Home />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/signin" element={<Signin />} />
