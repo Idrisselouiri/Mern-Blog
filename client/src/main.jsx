@@ -7,19 +7,22 @@ import {
   RouterProvider,
   Route,
 } from "react-router-dom";
+
+//layout
+import NavBar from "./components/layout/NavBar.jsx";
+//pages
 import Home from "./pages/Home.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import Signin from "./pages/Signin.jsx";
 import Login from "./pages/Login.jsx";
-import NavBar from "./components/layout/NavBar.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route element={<NavBar />}>
       <Route path="/" element={<Home />} />
       <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/signin" element={<Signin />} />
-      <Route path="/login" element={<Login />} />
+      <Route path="/sign-in" element={<Signin />} />
+      <Route path="/log-in" element={<Login />} />
     </Route>
   )
 );
