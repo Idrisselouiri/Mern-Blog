@@ -5,6 +5,7 @@ import { AiOutlineSearch } from "react-icons/ai";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { toggleTheme } from "../../redux/theme/themSlice";
+
 const NavBar = () => {
   const path = useLocation().pathname;
   const { currentUser } = useSelector((state) => state.user);
@@ -40,7 +41,7 @@ const NavBar = () => {
             pill
             onClick={() => dispatch(toggleTheme())}
           >
-            {theme === "light" ? <FaMoon /> : <FaSun />}
+            {theme === "light" ? <FaSun /> : <FaMoon />}
           </Button>
           {currentUser ? (
             <Dropdown
