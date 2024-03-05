@@ -2,7 +2,7 @@ import bcryptjs from "bcryptjs";
 import { errorHandler } from "../utils/error.js";
 import User from "../models/user.model.js";
 
-export const update = async (req, res, next) => {
+export const updateUser = async (req, res, next) => {
   if (req.user.id !== req.params.id) {
     return next(errorHandler(403, "You are not allowed to update this user"));
   }
@@ -42,6 +42,29 @@ export const update = async (req, res, next) => {
     );
     const { password, ...infoUpdate } = updateUser._doc;
     res.status(200).json(infoUpdate);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteUser = async (req, res, next) => {
+  if (req.user.id !== req.params.id) {
+    return next(errorHandler(403, "You are not allowed to delete this user"));
+  }
+  try {
+    await User.findByIdAndDelete(req.params.id);
+    res.status(200).json("User has been deleted");
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const signoutUser = (req, res, next) => {
+  try {
+    res
+      .clearCookie("access_token")
+      .status(200)
+      .json("User has been signed out");
   } catch (error) {
     next(error);
   }
