@@ -66,7 +66,6 @@ const CreatePost = () => {
     e.preventDefault();
     try {
       setPublishError(null);
-
       const data = await fetch("/api/post/create", {
         method: "POST",
         headers: {
@@ -142,9 +141,6 @@ const CreatePost = () => {
         {imageFileUploadError && (
           <Alert color="failure">{imageFileUploadError}</Alert>
         )}
-        {imageFileUploadError && (
-          <Alert color="failure">{imageFileUploadError}</Alert>
-        )}
         {formData.image && (
           <img
             src={formData.image}
@@ -162,6 +158,11 @@ const CreatePost = () => {
         <Button type="submit" gradientDuoTone="purpleToPink">
           Publish
         </Button>
+        {publishError && (
+          <Alert className="mt-5" color="failure">
+            {publishError}
+          </Alert>
+        )}
       </form>
     </div>
   );
