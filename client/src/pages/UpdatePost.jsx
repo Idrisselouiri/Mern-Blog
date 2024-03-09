@@ -12,13 +12,37 @@ import {
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
+import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 
 const UpdatePost = () => {
+  const { currentUser } = useSelector((state) => state.user);
   const [fileImage, setFileImage] = useState(null);
   const [imageUploadProgress, setImageUploadProgress] = useState(null);
   const [imageFileUploadError, setImageFileUploadError] = useState(null);
   const [publishError, setPublishError] = useState(null);
   const [formData, setFormData] = useState({});
+  const { postId } = useParams();
+
+  useEffect(() => {
+    try {
+      const fetchPost = async () => {
+        const data = await fetch(`/api/post/getPosts?postId=${postId}`);
+        const res = await data.json();
+        if (res.success === false) {
+          setPublishError(res.message);
+          return;
+        }
+        if (data.ok) {
+          setFormData(res.posts[0]);
+          setPublishError(null);
+        }
+      };
+      fetchPost();
+    } catch (error) {
+      console.log(error.message);
+    }
+  }, [postId]);
 
   const handleChangeImage = (e) => {
     const file = e.target.files[0];
@@ -66,8 +90,8 @@ const UpdatePost = () => {
     e.preventDefault();
     try {
       setPublishError(null);
-      const data = await fetch("/api/post/create", {
-        method: "POST",
+      const data = await fetch(`/api/post/update/${postId}/${currentUser}`, {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
@@ -101,11 +125,13 @@ const UpdatePost = () => {
             onChange={(e) =>
               setFormData({ ...formData, title: e.target.value })
             }
+            value={formData.title}
           />
           <Select
             onChange={(e) =>
               setFormData({ ...formData, category: e.target.value })
             }
+            value={formData.category}
           >
             <option value="uncategorized">Select a category</option>
             <option value="javascript">JavaScript</option>
@@ -155,9 +181,10 @@ const UpdatePost = () => {
           className="h-72 mb-12"
           required
           onChange={(value) => setFormData({ ...formData, content: value })}
+          value={formData.content}
         />
         <Button type="submit" gradientDuoTone="purpleToPink">
-          Publish
+          Edit
         </Button>
         {publishError && (
           <Alert className="mt-5" color="failure">
