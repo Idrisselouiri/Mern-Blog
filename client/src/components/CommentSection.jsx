@@ -1,11 +1,17 @@
 import { Alert, Button, Textarea } from "flowbite-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import Comment from "./Comment";
+
 const CommentSection = ({ postId }) => {
   const { currentUser } = useSelector((state) => state.user);
   const [comment, setComment] = useState("");
   const [commentError, setCommentError] = useState("");
+  const [comments, setComments] = useState([]);
+  const navigate = useNavigate();
+
+  console.log(comments);
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -22,14 +28,60 @@ const CommentSection = ({ postId }) => {
       const res = await data.json();
       if (res.success === false) {
         setCommentError(res.message);
+        return;
       }
       if (data.ok) {
         setComment("");
         setCommentError("");
-        console.log(res);
+        setComments([data, ...comments]);
       }
     } catch (error) {
       setCommentError(error.message);
+    }
+  };
+  useEffect(() => {
+    const fetchComments = async () => {
+      try {
+        const data = await fetch(`/api/comment/get/${postId}`);
+        const res = await data.json();
+        if (res.success === false) {
+          console.log(res.message);
+          return;
+        }
+        if (data.ok) {
+          setComments(res);
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+    fetchComments();
+  }, [postId]);
+  const handleLike = async (commentId) => {
+    try {
+      if (!currentUser) {
+        navigate("/sign-in");
+        return;
+      }
+      const data = await fetch(`/api/comment/likeComment/${commentId}`, {
+        method: "PUT",
+      });
+      if (data.ok) {
+        const res = await data.json();
+        setComments(
+          comments.map((comment) =>
+            comment._id === commentId
+              ? {
+                  ...comment,
+                  likes: res.likes,
+                  numberOfLikes: res.likes.length,
+                }
+              : comment
+          )
+        );
+      }
+    } catch (error) {
+      console.log(error.message);
     }
   };
   return (
@@ -83,6 +135,21 @@ const CommentSection = ({ postId }) => {
             </Alert>
           )}
         </form>
+      )}
+      {comments.length === 0 ? (
+        <p className="text-sm my-5">No comments yet!</p>
+      ) : (
+        <>
+          <div className="text-sm my-5 flex items-center gap-1">
+            <p>Comments</p>
+            <div className="border border-gray-400 py-1 px-2 rounded-sm">
+              <p>{comments.length}</p>
+            </div>
+          </div>
+          {comments.map((comment) => (
+            <Comment key={comment._id} comment={comment} onLike={handleLike} />
+          ))}
+        </>
       )}
     </div>
   );
