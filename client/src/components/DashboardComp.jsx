@@ -21,9 +21,7 @@ const DashboardComp = () => {
   const [lastMonthUsers, setLastMonthUsers] = useState(0);
   const [lastMonthPosts, setLastMonthPosts] = useState(0);
   const [lastMonthComments, setLastMonthComments] = useState(0);
-  console.log(users);
-  console.log(posts);
-  console.log(comments);
+
   useEffect(() => {
     const fetchPostData = async () => {
       try {
