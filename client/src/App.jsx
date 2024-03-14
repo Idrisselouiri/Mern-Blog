@@ -16,6 +16,7 @@ import ScrollToTop from "./components/ScrollToTop.jsx";
 import Search from "./pages/Search.jsx";
 import FooterCom from "./components/Footer.jsx";
 import About from "./pages/About.jsx";
+import Projects from "./pages/Project.jsx";
 const App = () => {
   return (
     <Router>
@@ -35,6 +36,7 @@ const App = () => {
         <Route path="/post/:postSlug" element={<PostPage />} />
         <Route path="/search" element={<Search />} />
         <Route path="/about" element={<About />} />
+        <Route path="/projects" element={<Projects />} />
       </Routes>
       <FooterCom />
     </Router>

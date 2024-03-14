@@ -13,7 +13,7 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const UpdatePost = () => {
   const { currentUser } = useSelector((state) => state.user);
@@ -23,7 +23,7 @@ const UpdatePost = () => {
   const [publishError, setPublishError] = useState(null);
   const [formData, setFormData] = useState({});
   const { postId } = useParams();
-
+  const navigate = useNavigate();
   useEffect(() => {
     try {
       const fetchPost = async () => {
@@ -90,13 +90,16 @@ const UpdatePost = () => {
     e.preventDefault();
     try {
       setPublishError(null);
-      const data = await fetch(`/api/post/update/${postId}/${currentUser}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const data = await fetch(
+        `/api/post/update/${postId}/${currentUser._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
       const res = await data.json();
       if (res.success === false) {
         setPublishError(res.message);
@@ -104,7 +107,7 @@ const UpdatePost = () => {
       }
       if (data.ok) {
         setPublishError(null);
-        navigate(`/post/${data.slug}`);
+        navigate(`/post/${res.slug}`);
       }
     } catch (error) {
       setPublishError("Something went wrong");
@@ -113,7 +116,7 @@ const UpdatePost = () => {
 
   return (
     <div className="p-3 max-w-3xl mx-auto min-h-screen">
-      <h1 className="text-center text-3xl my-7 font-semibold">Create a post</h1>
+      <h1 className="text-center text-3xl my-7 font-semibold">Edit a post</h1>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div className="flex flex-col gap-4 sm:flex-row justify-between">
           <TextInput

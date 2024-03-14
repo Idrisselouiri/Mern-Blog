@@ -12,6 +12,7 @@ import {
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
+import { useNavigate } from "react-router-dom";
 
 const UpdatePost = () => {
   const [fileImage, setFileImage] = useState(null);
@@ -19,7 +20,7 @@ const UpdatePost = () => {
   const [imageFileUploadError, setImageFileUploadError] = useState(null);
   const [publishError, setPublishError] = useState(null);
   const [formData, setFormData] = useState({});
-
+  const navigate = useNavigate();
   const handleChangeImage = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -80,7 +81,7 @@ const UpdatePost = () => {
       }
       if (data.ok) {
         setPublishError(null);
-        navigate(`/post/${data.slug}`);
+        navigate(`/post/${res.slug}`);
       }
     } catch (error) {
       setPublishError("Something went wrong");
