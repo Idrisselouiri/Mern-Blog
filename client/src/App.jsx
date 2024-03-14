@@ -14,6 +14,8 @@ import UpdatePost from "./pages/UpdatePost.jsx";
 import PostPage from "./pages/PostPage.jsx";
 import ScrollToTop from "./components/ScrollToTop.jsx";
 import Search from "./pages/Search.jsx";
+import FooterCom from "./components/Footer.jsx";
+import About from "./pages/About.jsx";
 const App = () => {
   return (
     <Router>
@@ -32,7 +34,9 @@ const App = () => {
         </Route>
         <Route path="/post/:postSlug" element={<PostPage />} />
         <Route path="/search" element={<Search />} />
+        <Route path="/about" element={<About />} />
       </Routes>
+      <FooterCom />
     </Router>
   );
 };
